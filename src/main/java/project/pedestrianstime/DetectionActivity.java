@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.WindowManager;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -45,6 +46,13 @@ public class DetectionActivity extends Activity implements CameraBridgeViewBase.
     private CameraManager mCameraManager    = null;
     private int REQUEST_CAMERA_PERMISSION = 0;
     private boolean load = false;
+    //обратотка касаний
+    //0 - ничего
+    //1 - сохранение резултьтата
+    //2 - показ
+    private int click = 0;
+    private Mat previous;
+
 
     private CascadeClassifier cascade = null;
     private Rect[] bufArray = null;
@@ -180,6 +188,26 @@ public class DetectionActivity extends Activity implements CameraBridgeViewBase.
         openCamera(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.HelloOpenCvView);
+        //обратотка касаний
+        mOpenCvCameraView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch(click){
+                    case 0:
+                        click = 1;
+                        break;
+                    case 1:
+                        click = 0;
+                        break;
+                    case 2:
+                        click = 0;
+                        break;
+                    default:
+                        click = 0;
+                        break;
+                }
+            }
+        });
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
 
@@ -219,9 +247,14 @@ public class DetectionActivity extends Activity implements CameraBridgeViewBase.
         bufFSC =0;
         FSC = Integer.parseInt(getIntent().getStringExtra("FSC"));;
 
+        if (click==2){
+            return previous;
+        }
+
         Mat mat = inputFrame.rgba();
         Mat mat_clone = inputFrame.gray();
         mat.copyTo(mat_clone);
+
 
         if (load) {
             MatOfRect faces = new MatOfRect();
@@ -233,6 +266,10 @@ public class DetectionActivity extends Activity implements CameraBridgeViewBase.
                 Imgproc.rectangle(mat, facesArray[i].tl(), facesArray[i].br(), new Scalar(0, 255, 0), 3);
             //тоже относится к пропуску фреймов
             bufArray = facesArray;
+        }
+        if (click==1) {
+            previous = mat;
+            click++;
         }
 
         return mat;

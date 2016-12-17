@@ -85,6 +85,13 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        mButtonGo.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                
+            }
+        });
+
 
         mButtonSettings = (ImageButton) findViewById(R.id.settings);
         mButtonSettings.setOnClickListener(new View.OnClickListener() {
