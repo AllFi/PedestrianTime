@@ -3,36 +3,58 @@ package project.pedestrianstime;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.hardware.camera2.CameraManager;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.CameraGLRendererBase;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.android.Utils;
+import org.opencv.core.Core;
+import org.opencv.core.CvException;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
+import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import project.pedestrianstime.R;
+
+import static org.opencv.imgcodecs.Imgcodecs.imwrite;
 
 /**
  * Created by админ on 16.12.2016.
@@ -65,6 +87,8 @@ public class DetectionActivity extends Activity implements CameraBridgeViewBase.
     private int min_height = 80;
     private int max_width = 153;
     private int max_height = 480;
+    private ImageButton save = null;
+    private Activity thisActivity = this;
 
 
     public void openCamera(Activity thisActivity) {
@@ -194,15 +218,20 @@ public class DetectionActivity extends Activity implements CameraBridgeViewBase.
             public void onClick(View v) {
                 switch(click){
                     case 0:
+                        save.setVisibility(ImageButton.VISIBLE);
+
                         click = 1;
                         break;
                     case 1:
+                        //save.setVisibility(ImageButton.INVISIBLE);
                         click = 0;
                         break;
                     case 2:
+                        //save.setVisibility(ImageButton.INVISIBLE);
                         click = 0;
                         break;
                     default:
+                        //save.setVisibility(ImageButton.INVISIBLE);
                         click = 0;
                         break;
                 }
@@ -211,7 +240,18 @@ public class DetectionActivity extends Activity implements CameraBridgeViewBase.
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
 
+        save = (ImageButton) findViewById(R.id.save);
+        save.setVisibility(ImageButton.VISIBLE);
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (click==2){
+
+                }
+            }
+        });
     }
+
 
     @Override
     public void onPause()
