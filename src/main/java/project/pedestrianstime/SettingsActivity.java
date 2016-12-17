@@ -27,6 +27,7 @@ public class SettingsActivity extends AppCompatActivity {
     public int cascadeNum=1;
     public EditText minNeighbors = null;
     private ImageButton apply = null;
+    private ImageButton defaultButton = null;
     private EditText FSC = null;
     private EditText min_width = null;
     private EditText min_height = null;
@@ -97,6 +98,21 @@ public class SettingsActivity extends AppCompatActivity {
                 intent.putExtra("max_width",max_width.getText().toString());
                 intent.putExtra("max_height",max_height.getText().toString());
                 startActivity(intent);
+            }
+        });
+
+        defaultButton = (ImageButton) findViewById(R.id.defaultButton);
+        defaultButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cascades.setSelection(2);
+                scaleFactor.setText("1.1");
+                minNeighbors.setText("3");
+                FSC.setText("0");
+                min_height.setText("80");
+                min_width.setText("30");
+                max_height.setText("480");
+                max_width.setText("153");
             }
         });
     }
