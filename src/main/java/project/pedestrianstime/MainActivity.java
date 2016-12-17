@@ -22,6 +22,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.Camera2Renderer;
@@ -88,7 +89,10 @@ public class MainActivity extends AppCompatActivity {
         mButtonGo.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        "Вторая версия приложения. Разработчик - Филиппов Александр.", Toast.LENGTH_SHORT);
+                toast.show();
+                return true;
             }
         });
 
