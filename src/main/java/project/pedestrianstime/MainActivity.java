@@ -66,11 +66,13 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra("cascade", "2");
                     intent.putExtra("scaleFactor", "1.1");
                     intent.putExtra("minNeighbors","3");
+                    intent.putExtra("FSC", "0");
                     startActivity(intent);
                 } else{
                     intent.putExtra("cascade", settings.getStringExtra("cascade"));
                     intent.putExtra("scaleFactor", settings.getStringExtra("scaleFactor"));
                     intent.putExtra("minNeighbors",settings.getStringExtra("minNeighbors"));
+                    intent.putExtra("FSC",settings.getStringExtra("FSC"));
                     startActivity(intent);
 
                 }

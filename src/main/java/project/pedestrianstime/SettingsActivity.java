@@ -27,7 +27,7 @@ public class SettingsActivity extends AppCompatActivity {
     public int cascadeNum=1;
     public EditText minNeighbors = null;
     private ImageButton apply = null;
-
+    private EditText FSC = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +63,9 @@ public class SettingsActivity extends AppCompatActivity {
         minNeighbors = (EditText) findViewById(R.id.editText2);
         minNeighbors.setText("3");
 
+        FSC = (EditText) findViewById(R.id.editText3);
+        FSC.setText("0");
+
         apply = (ImageButton) findViewById(R.id.apply);
         apply.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,6 +75,7 @@ public class SettingsActivity extends AppCompatActivity {
                 intent.putExtra("cascade", String.valueOf(cascadeNum));
                 intent.putExtra("scaleFactor",scaleFactor.getText().toString());
                 intent.putExtra("minNeighbors",minNeighbors.getText().toString());
+                intent.putExtra("FSC",FSC.getText().toString());
                 startActivity(intent);
             }
         });
