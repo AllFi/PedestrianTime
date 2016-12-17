@@ -67,12 +67,20 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra("scaleFactor", "1.1");
                     intent.putExtra("minNeighbors","3");
                     intent.putExtra("FSC", "0");
+                    intent.putExtra("min_width", "30");
+                    intent.putExtra("min_height", "80");
+                    intent.putExtra("min_width", "153");
+                    intent.putExtra("min_height", "480");
                     startActivity(intent);
                 } else{
                     intent.putExtra("cascade", settings.getStringExtra("cascade"));
                     intent.putExtra("scaleFactor", settings.getStringExtra("scaleFactor"));
                     intent.putExtra("minNeighbors",settings.getStringExtra("minNeighbors"));
                     intent.putExtra("FSC",settings.getStringExtra("FSC"));
+                    intent.putExtra("min_width",settings.getStringExtra("min_width"));
+                    intent.putExtra("min_height",settings.getStringExtra("min_height"));
+                    intent.putExtra("max_width",settings.getStringExtra("max_width"));
+                    intent.putExtra("max_height",settings.getStringExtra("max_height"));
                     startActivity(intent);
 
                 }

@@ -28,6 +28,10 @@ public class SettingsActivity extends AppCompatActivity {
     public EditText minNeighbors = null;
     private ImageButton apply = null;
     private EditText FSC = null;
+    private EditText min_width = null;
+    private EditText min_height = null;
+    private EditText max_width = null;
+    private EditText max_height = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +70,18 @@ public class SettingsActivity extends AppCompatActivity {
         FSC = (EditText) findViewById(R.id.editText3);
         FSC.setText("0");
 
+        min_height = (EditText) findViewById(R.id.editText5);
+        min_height.setText("80");
+
+        min_width = (EditText) findViewById(R.id.editText4);
+        min_width.setText("30");
+
+        max_height = (EditText) findViewById(R.id.editText7);
+        max_height.setText("480");
+
+        max_width = (EditText) findViewById(R.id.editText6);
+        max_width.setText("153");
+
         apply = (ImageButton) findViewById(R.id.apply);
         apply.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,6 +92,10 @@ public class SettingsActivity extends AppCompatActivity {
                 intent.putExtra("scaleFactor",scaleFactor.getText().toString());
                 intent.putExtra("minNeighbors",minNeighbors.getText().toString());
                 intent.putExtra("FSC",FSC.getText().toString());
+                intent.putExtra("min_width",min_width.getText().toString());
+                intent.putExtra("min_height",min_height.getText().toString());
+                intent.putExtra("max_width",max_width.getText().toString());
+                intent.putExtra("max_height",max_height.getText().toString());
                 startActivity(intent);
             }
         });

@@ -47,7 +47,16 @@ public class DetectionActivity extends Activity implements CameraBridgeViewBase.
     private boolean load = false;
 
     private CascadeClassifier cascade = null;
+    private Rect[] bufArray = null;
+    private int FSC = 0;
+    private int bufFSC = 0;
 
+    private float scaleFactor = (float) 1.1;
+    private int minNeighbors = 3;
+    private int min_width = 30;
+    private int min_height = 80;
+    private int max_width = 153;
+    private int max_height = 480;
 
 
     public void openCamera(Activity thisActivity) {
@@ -162,6 +171,12 @@ public class DetectionActivity extends Activity implements CameraBridgeViewBase.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        scaleFactor = Float.parseFloat(getIntent().getStringExtra("scaleFactor"));
+        minNeighbors = Integer.parseInt(getIntent().getStringExtra("minNeighbors"));
+        min_width = Integer.parseInt(getIntent().getStringExtra("min_width"));
+        min_height = Integer.parseInt(getIntent().getStringExtra("min_height"));
+        max_width = Integer.parseInt(getIntent().getStringExtra("max_width"));
+        max_height = Integer.parseInt(getIntent().getStringExtra("max_height"));
         openCamera(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.HelloOpenCvView);
@@ -190,10 +205,6 @@ public class DetectionActivity extends Activity implements CameraBridgeViewBase.
     public void onCameraViewStopped() {
     }
 
-    private Rect[] bufArray = null;
-    private int FSC = 0;
-    private int bufFSC = 0;
-
 
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
 
@@ -211,13 +222,11 @@ public class DetectionActivity extends Activity implements CameraBridgeViewBase.
         Mat mat = inputFrame.rgba();
         Mat mat_clone = inputFrame.gray();
         mat.copyTo(mat_clone);
-        float scaleFactor = Float.parseFloat(getIntent().getStringExtra("scaleFactor"));
-        int minNeighbors = Integer.parseInt(getIntent().getStringExtra("minNeighbors"));
 
         if (load) {
             MatOfRect faces = new MatOfRect();
             cascade.detectMultiScale(mat_clone, faces,scaleFactor , minNeighbors, 2, // TODO: objdetect.CV_HAAR_SCALE_IMAGE
-                    new Size(30, 80), new Size(150, 400));
+                    new Size(min_width, min_height), new Size(max_width, max_height));
 
             Rect[] facesArray = faces.toArray();
             for (int i = 0; i < facesArray.length; i++)
