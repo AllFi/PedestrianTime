@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -51,6 +52,7 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Random;
 
 import project.pedestrianstime.R;
 
@@ -246,10 +248,63 @@ public class DetectionActivity extends Activity implements CameraBridgeViewBase.
             @Override
             public void onClick(View view) {
                 if (click==2){
+                    Bitmap bmp = null;
 
+                    try {
+                        bmp = Bitmap.createBitmap(previous.cols(), previous.rows(), Bitmap.Config.ARGB_8888);
+                        Utils.matToBitmap(previous, bmp);
+                        SavePicture(bmp);
+                        click=0;
+                    }
+                    catch (CvException e){Log.d("Exception",e.getMessage());}
                 }
+
             }
         });
+    }
+
+    private void SavePicture(Bitmap bmp)
+    {
+        //ибаный пермишен
+        String[] perms = {"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.READ_EXTERNAL_STORAGE"};
+        int permsRequestCode = 200;
+        requestPermissions(perms, permsRequestCode);
+
+        //дата
+        SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss.S");
+        GregorianCalendar calendar = new GregorianCalendar();
+        Date dateTime = calendar.getTime();
+        String curDate = dateFormat.format(dateTime);
+
+        String root = Environment.getExternalStorageDirectory().toString();
+        File myDir = new File(root + "/Pictures/PedestrianTime");
+        myDir.mkdirs();
+        String fname = "Image-" + curDate + ".jpg";
+        File file = new File(myDir, fname);
+        Log.i(TAG, "" + file);
+        if (file.exists())
+            file.delete();
+
+        try {
+
+            FileOutputStream out = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, out);
+
+            out.flush();
+            out.close();
+
+            MediaStore.Images.Media.insertImage(this.getContentResolver(), file.getAbsolutePath(), file.getName(), file.getName()); // регистрация в фотоальбоме
+            MediaScannerConnection.scanFile(this,
+                    new String[]{file.toString()}, null,
+                    new MediaScannerConnection.OnScanCompletedListener() {
+                        public void onScanCompleted(String path, Uri uri) {
+                            Log.i("ExternalStorage", "Scanned " + path + ":");
+                            Log.i("ExternalStorage", "-> uri=" + uri);
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
